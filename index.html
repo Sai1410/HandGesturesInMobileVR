@@ -1,33 +1,29 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
     <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-physics-system@1.4.0/dist/aframe-physics-system.min.js"></script>
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   	
-  	<title>WebGLBasicTerrain</title>
-  </head>
-  <body>
-    <a-scene physics>
-    	<!-- Camera -->
-	    <a-entity camera="userHeight: 1" look-controls universal-controls kinematic-body wasd-controls position="0 0.5 0">
-	      <a-cursor color="#000"></a-cursor>
-	      
-	    </a-entity>
-	    
-	    <!-- Object -->
-	    <a-box position="0 0.5 -1.5" color="#e2e2e2" shadow dynamic-body depth="1" width="1" height = "1"></a-box>
+	<link rel="stylesheet" href="styles/styles.css">
+	<title>WebGLBasicTerrain</title>
+</head>
 
-	    <!-- ground -->
-   		<a-plane id="ground" color="#3cba31" rotation="270 0 0" width="300" height="300" position="0 -0.2 0" shadow static-body></a-plane>
-    
-    	<!-- sky -->
-    	<a-sky color="#64B5F6"></a-sky>
-    	
-    </a-scene>
-  
-  <!-- endbower -->
-  <script src="vendor/aframe-particle-system-component.js"></script>
-  
-  </body>
+<body>
+
+	<div id="container">
+
+		<video id="videoInput"  width="640" height="480" autoplay muted></video>
+		<canvas id="canvasOutput" width="640" height="480"></canvas> 
+		<canvas id="canvasTemp" width="640" height="480"></canvas>
+
+
+		<script src="js/CameraConfiguration.js" type="text/javascript"></script>
+		<script src="js/opencv.js" type="text/javascript"></script>
+		<script src="js/handDetection.js" type="text/javascript"></script>
+	  
+	</div>
+
+</body>
 </html>
