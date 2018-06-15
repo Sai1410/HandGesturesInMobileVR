@@ -2,9 +2,6 @@
 
 let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
 let temp = new cv.Mat(video.height, video.width, cv.CV_8UC1);
-let temp2 = new cv.Mat(video.height, video.width, cv.CV_8UC1);
-let temp3 = new cv.Mat();
-let temp4 = new cv.Mat();
 let dst = new cv.Mat.zeros(video.height, video.width, cv.CV_8UC3);
 let cap = new cv.VideoCapture(video);
 
@@ -13,9 +10,12 @@ let color = new cv.Scalar(255, 0, 0);
 let lowScalarHSV = new cv.Scalar(90, 0, 0);
 let highScalarHSV = new cv.Scalar(140,255, 0.5 * 255);
 
-var mainTips;
+var thumb = new cv.Point();
+var pointer = new cv.Point();
 
 let tipPoints = [];
+
+let i = 0;
 
 function getDist(a, b){
 
@@ -24,8 +24,6 @@ function getDist(a, b){
 	
 	return Math.sqrt(diffx*diffx + diffy*diffy);
 }
-
-
 
 function makeHandMaskHSV(){
 
@@ -124,8 +122,6 @@ function detectFingerTips(cnt, hull, rect){
 
 function getThumbAndPointer(){
 
-	let thumb = new cv.Point();
-	let pointer = new cv.Point();
 	let minx = video.width;
 	
 	for(let i = 0; i < tipPoints.length; i++){
@@ -137,11 +133,12 @@ function getThumbAndPointer(){
 			minx = thumb.x;
 		} 
 	}
+	
 	cv.circle(dst, thumb, 3, color, -1);
 	cv.circle(dst, pointer, 3, color, -1);
 }
 
-function makeContours(){
+function detectHand(){
 
     let contours = new cv.MatVector();
     let hierarchy = new cv.Mat();
@@ -184,12 +181,40 @@ function makeContours(){
 
 };
 
-function detectFingers(){
+function transformCoordinatesToAFRAME(point){
 
+	const MAXX = 1.68;
+	const MAXY = 0.84;
 	
-
+	let t = point.x/video.width;
+	let x = t * (MAXX * 2) - MAXX;
+	t = point.y/video.height;
+	let y = -(t * (MAXY * 2) - MAXY);
+	
+	return new cv.Point(x,y);
 }
 
+function insertHandToVR(){
+
+	var scene = document.querySelector('a-scene');
+	let thumbAFRAME = new cv.Point();
+	let pointerAFRAME = new cv.Point();
+	
+	thumbAFRAME = transformCoordinatesToAFRAME(thumb);
+	pointerAFRAME = transformCoordinatesToAFRAME(pointer);
+
+	if (scene.hasLoaded) {
+		let thumbCursor = document.querySelector("#thumbCursor");
+		let pointerCursor = document.querySelector("#pointerCursor");
+		
+		thumbCursor.setAttribute("position", thumbAFRAME.x + " " + thumbAFRAME.y + " -1");
+		pointerCursor.setAttribute("position", pointerAFRAME.x + " " + pointerAFRAME.y + " -1");
+	} else {
+	  scene.addEventListener('loaded', run);
+	}
+
+}
+	
 const FPS = 20;
 function processVideo() {
 
@@ -201,14 +226,12 @@ function processVideo() {
         
         makeHandMaskHSV();
 		
-		makeContours();
-		
-		detectFingers();
-		
-		//cv.cvtColor(src, temp2, cv.COLOR_BGR2HSV);
-		
-		cv.imshow('canvasOutput', dst);
-		//cv.imshow('canvasTemp', temp2);
+		detectHand();
+
+		insertHandToVR();
+
+		//cv.imshow('canvasOutput', dst);
+
         // schedule the next one.
         let delay = 1000/FPS - (Date.now() - begin);
         setTimeout(processVideo, delay);
