@@ -13,14 +13,17 @@ let highScalarHSV = new cv.Scalar(140,255, 0.5 * 255);
 var thumb = new cv.Point();
 var pointer = new cv.Point();
 
+var grabState = false;
+
 let tipPoints = [];
 
 let i = 0;
 
+
 function getDist(a, b){
 
-	let diffx = a.x-b.x;
-	let diffy = a.y-b.y;
+	let diffx = b.x-a.x;
+	let diffy = b.y-a.y;
 	
 	return Math.sqrt(diffx*diffx + diffy*diffy);
 }
@@ -94,7 +97,7 @@ function decideTipPoint(previewTip, point, rect){
 			tipPoints.push(point);
 		}
 	}
-
+	
 }
 
 
@@ -118,6 +121,7 @@ function detectFingerTips(cnt, hull, rect){
 		
 		previewTip = point;
 	}
+	
 }
 
 function getThumbAndPointer(){
@@ -134,8 +138,27 @@ function getThumbAndPointer(){
 		} 
 	}
 	
-	cv.circle(dst, thumb, 3, color, -1);
-	cv.circle(dst, pointer, 3, color, -1);
+	//cv.circle(dst, thumb, 3, color, -1);
+	//cv.circle(dst, pointer, 3, color, -1);
+}
+
+function detectGrabbing() {
+	if(tipPoints.length == 4) {
+		if(getDist(pointer,thumb) > 50) {
+			grabState = true;
+			console.log("GRABBED");
+		}
+	
+	} else if (tipPoints.length == 5){
+		if(getDist(pointer,thumb) < 30) {
+			grabState = true;
+			console.log("GRABBED");
+		} else {
+		
+			grabState = false;
+			console.log("NOT GRABBED");
+		}
+	}	
 }
 
 function detectHand(){
@@ -171,9 +194,14 @@ function detectHand(){
 		// detect fingertips
 		detectFingerTips(cnt, hull, rect);
 		
-		// Get thumb and pointing finger
-		getThumbAndPointer();
-		
+		if(tipPoints.length > 3){
+			// Get thumb and pointing finger
+			getThumbAndPointer();
+			
+			// DetectGrabbing
+			detectGrabbing();
+		}
+
 		
 		tipPoints = [];
 
@@ -214,7 +242,9 @@ function insertHandToVR(){
 	}
 
 }
-	
+
+
+
 const FPS = 20;
 function processVideo() {
 
@@ -229,7 +259,7 @@ function processVideo() {
 		detectHand();
 
 		insertHandToVR();
-
+		
 		//cv.imshow('canvasOutput', dst);
 
         // schedule the next one.
