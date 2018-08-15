@@ -1,4 +1,5 @@
 // segmenting by skin color (has to be adjusted)
+//"use strict";
 
 let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
 let temp = new cv.Mat(video.height, video.width, cv.CV_8UC1);
@@ -7,11 +8,29 @@ let cap = new cv.VideoCapture(video);
 
 let color = new cv.Scalar(255, 0, 0);
 
-let lowScalarHSV = new cv.Scalar(90, 0, 0);
-let highScalarHSV = new cv.Scalar(140,255, 0.5 * 255);
+let lowScalarHSV= new cv.Scalar(0, 0, 0);
+let highScalarHSV= new cv.Scalar(65,255, 15);
+let lowRangeHSV = new cv.Mat(temp.rows, temp.cols, temp.type(), new cv.Scalar(0, 0, 0));
+let highRangeHSV = new cv.Mat(temp.rows, temp.cols, temp.type(), new cv.Scalar(65,255, 15));
+
+let lowScalarGRAY= new cv.Scalar(0, 0, 0);
+let highScalarGRAY= new cv.Scalar(65,255, 15);
+let lowRangeGRAY= new cv.Mat(temp.rows, temp.cols, temp.type(), lowScalarGRAY);
+let highRangeGRAY = new cv.Mat(temp.rows, temp.cols, temp.type(), highScalarGRAY );
+
+let ksize = new cv.Size(9, 9);
+
+let centroid = new cv.Point();
+
+let hull = new cv.Mat();
 
 var thumb = new cv.Point();
 var pointer = new cv.Point();
+
+let contours = new cv.MatVector();
+let hierarchy = new cv.Mat();
+
+let defect = new cv.Mat();
 
 var grabState = false;
 
@@ -41,22 +60,29 @@ function getDist(a, b){
 }
 
 function makeHandMaskHSV(){
+	
+		cv.cvtColor(src, temp, cv.COLOR_RGB2HSV, 0);
+		cv.inRange(temp,lowRangeHSV, highRangeHSV,temp);
+		//cv.GaussianBlur(temp, temp, ksize, 0, 0, cv.BORDER_DEFAULT);
+		//cv.threshold(temp, temp, 200, 255,cv.THRESH_BINARY);
+		
+}
 
-		cv.cvtColor(src, temp, cv.COLOR_BGR2HSV, 0);
-		let low = new cv.Mat(temp.rows, temp.cols, temp.type(), lowScalarHSV);
-		let high = new cv.Mat(temp.rows, temp.cols, temp.type(), highScalarHSV);
-		cv.inRange(temp,low, high,temp);
-		let ksize = new cv.Size(9, 9);
-		cv.GaussianBlur(temp, temp, ksize, 0, 0, cv.BORDER_DEFAULT);
-		cv.threshold(temp, temp, 200, 255,cv.THRESH_BINARY);
-		
-		
+function makeHandMaskGRAY(){
+
+	cv.cvtColor(src, temp, cv.COLOR_RGB2GRAY, 0);
+	
+	cv.inRange(temp,lowRangeGRAY, highRangeGRAY,temp);
+	
+	cv.GaussianBlur(temp, temp, ksize, 0, 0, cv.BORDER_DEFAULT);
+	cv.threshold(temp, temp, 200, 255,cv.THRESH_BINARY);
+	
 }
 
 function findCenter(cnt){
 
 	let moments = cv.moments(cnt, false);
-	let centroid = new cv.Point();
+	
 	if(moments.m00 !=0 ){
 	
 		centroid.x = moments.m10/moments.m00;
@@ -95,7 +121,9 @@ function getRectangle(cnt){
 
 function decideTipPoint(previewTip, point, rect){
 	
-	dist = getDist(new cv.Point(point.x, rect.y + rect.height), point);
+	let newPoint = new cv.Point(point.x, rect.y + rect.height)
+	dist = getDist(newPoint, point);
+	
 	if(previewTip){
 	
 		dist2 = getDist(previewTip, point);
@@ -109,13 +137,11 @@ function decideTipPoint(previewTip, point, rect){
 			tipPoints.push(point);
 		}
 	}
-	
 }
 
 
 function detectFingerTips(cnt, hull, rect){
-	
-	let defect = new cv.Mat();
+
 	let total = 0;
 	let previewTip = null;
 	let previewFold = null;
@@ -172,14 +198,9 @@ function detectGrabbing() {
 
 function detectHand(){
 
-    let contours = new cv.MatVector();
-    let hierarchy = new cv.Mat();
-	
 	let cnt;
 	let rect;
 	let center;
-	let hull = new cv.Mat();
-	
 
 	// find contours on img
 	cv.findContours(temp, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
@@ -265,7 +286,6 @@ function moveAnObject() {
 			// Count distance between camera and obj
 			d = getDist(obj_point, camera_point);
 			zero_position = false;
-			
 				
 		} else {
 			
@@ -288,26 +308,24 @@ function moveAnObject() {
 
 const FPS = 25;
 function processVideo() {
-
         let begin = Date.now();
-        
+
         // start processing.
         cap.read(src);
-        src.copyTo(dst);
         
-        makeHandMaskHSV();
-		
+        makeHandMaskGRAY();
+
 		detectHand();
 
 		checkHover();
 		
 		moveAnObject();
 
+        //cv.imshow('canvasOutput', temp);
+
         // schedule the next one.
         let delay = 1000/FPS - (Date.now() - begin);
         setTimeout(processVideo, delay);
-
-};
-
+}
 // schedule the first one.
 setTimeout(processVideo, 0);
