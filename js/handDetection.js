@@ -26,11 +26,7 @@ var d = 0;
 var el = document.getElementById('box');
 var cam = document.getElementById('camera');
 var cur = document.getElementById('cursor');
-var defaultCursorColor = el.getAttribute('color');
-
-const eventGrab = new Event('grabbed_object', {
-  bubbles: true,
-});
+var defaultCursorColor = cur.getAttribute('color');
 
 function toRadians (angle) {
   return angle * (Math.PI / 180);
@@ -248,41 +244,49 @@ function checkHover() {
 			el.setAttribute('color', "white");
 	  });
 	  
-	  if(hovered && grabState){
-	  	
-	  	cur.setAttribute('color', 'red' )
-	  	let curr_obj_position = el.getAttribute('position');
-	  	let curr_camera_position = cam.getAttribute('position');
-	  	let curr_camera_rotation = cam.getAttribute('rotation');
-
-	  	if(zero_position){
-	  		
-	  		obj_point = new cv.Point(curr_obj_position.z, curr_obj_position.x);
-	  		camera_point = new cv.Point(curr_camera_position.z, curr_camera_position.x);
-	  		
-	  		// Count distance between camera and obj
-	  		d = getDist(obj_point, camera_point);
-	  		zero_position=false;
-	  		
-	  	} else {
-	  		
-	  		// Count new position
-	  		let new_position_z = (-1)*d*Math.cos(toRadians(curr_camera_rotation.y));
-	  		let new_position_x = d*Math.sin(toRadians(curr_camera_rotation.y));
-	  		
-	  		el.setAttribute('position', new_position_x + ' ' + curr_camera_position.y + ' ' + new_position_z);
-	  	}
-
-	  } else {
-	  
-	  	// If not grabbing object start again
-	  	zero_position=true;
-	  	cur.setAttribute('color', defaultCursorColor )
-	  }
 }
 
+function moveAnObject() {
 
-const FPS = 20;
+	if(hovered && grabState){
+		  	
+		cur.setAttribute('color', 'red' )
+		
+		let curr_camera_position = cam.getAttribute('position');
+		let curr_camera_rotation = cam.getAttribute('rotation');
+		
+		if(zero_position == true){
+		
+			let curr_obj_position = el.getAttribute('position');
+			//console.log(curr_obj_position);
+			obj_point = new cv.Point(curr_obj_position.z, curr_obj_position.x);
+			camera_point = new cv.Point(curr_camera_position.z, curr_camera_position.x);
+			
+			// Count distance between camera and obj
+			d = getDist(obj_point, camera_point);
+			zero_position = false;
+			
+				
+		} else {
+			
+			// Count new position
+			let new_position_z = (-1)*d*Math.cos(toRadians(curr_camera_rotation.y));
+			let new_position_x = (-1)*Math.sin(toRadians(curr_camera_rotation.y));
+			
+			el.object3D.position.set(new_position_x, curr_camera_position.y, new_position_z);
+			
+		}
+			
+	} else {
+	  
+		// If not grabbing object start again
+		zero_position=true;
+		cur.setAttribute('color', defaultCursorColor )
+	}
+	
+}
+
+const FPS = 25;
 function processVideo() {
 
         let begin = Date.now();
@@ -297,8 +301,8 @@ function processVideo() {
 
 		checkHover();
 		
+		moveAnObject();
 
-	  	
         // schedule the next one.
         let delay = 1000/FPS - (Date.now() - begin);
         setTimeout(processVideo, delay);

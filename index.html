@@ -1,47 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-physics-system@1.4.0/dist/aframe-physics-system.min.js"></script>
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- 	<script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
-  	
-	<link rel="stylesheet" href="styles/styles.css">
-	<title>HandInVR</title>
+<meta charset="utf-8">
+<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+<script
+	src="https://unpkg.com/aframe-physics-system@1.4.0/dist/aframe-physics-system.min.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
+
+<link rel="stylesheet" href="styles/styles.css">
+<title>HandInVR</title>
 </head>
 
 <body>
-	<video id="videoInput"  width="640" height="480" autoplay muted></video>
-	<canvas id="canvasOutput" width="640" height="480"></canvas> 
+
+	<a-scene physics> <a-box id="box" position="0 0.5 -1.5"
+		color="#e2e2e2" depth="0.5" width="0.5" height="0.5"
+		change-color-on-hover="color: #8bdfec"></a-box> <a-plane id="ground"
+		color="#3cba31" rotation="270 0 0" width="300" height="300"
+		position="0 -0.2 0" shadow static-body> </a-plane> <a-sky
+		color="#64B5F6"> </a-sky> <a-camera id="camera" universal-controls
+		wasd-controls position="0 0.5 0"> <a-cursor id="cursor"
+		color="white"> </a-cursor> </a-camera> </a-scene>
+
+	<video id="videoInput" width="640" height="480" autoplay muted></video>
+	<canvas id="canvasOutput" width="640" height="480"></canvas>
 	<canvas id="canvasTemp" width="640" height="480"></canvas>
-	
 
-
-	<a-scene physics>
-
-
-		<!-- Object -->
-		<a-box id="box" position="0 0.5 -1.5" color="#e2e2e2" shadow dynamic-body depth="1" width="1" height = "1"
-			change-color-on-hover="color: #8bdfec"></a-box>
-
-
-		<!-- ground -->
-		<a-plane id="ground" color="#3cba31" rotation="270 0 0" width="300" height="300" position="0 -0.2 0" shadow static-body></a-plane>
-
-		<!-- sky -->
-		<a-sky color="#64B5F6"></a-sky>
-		<!-- Camera -->
-		<a-camera id="camera" universal-controls wasd-controls position="0 0.5 0">
-			<a-cursor id="cursor" color="white"></a-cursor>
-		</a-camera>
-	</a-scene>
-	
 	<script src="js/CameraConfiguration.js" type="text/javascript"></script>
 	<script src="js/opencv.js" type="text/javascript"></script>
 	<script src="js/handDetection.js" type="text/javascript"></script>
-	
 
-	
 </body>
 </html>
