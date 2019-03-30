@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+<script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
 <script
 	src="https://unpkg.com/aframe-physics-system@1.4.0/dist/aframe-physics-system.min.js"></script>
 <script
@@ -16,29 +16,28 @@
 
 <body>
 
-	<a-scene physics> 
-		<a-box id="box" position="0 0.5 -1.5"
+	<a-scene physics id="ascene"> 
+		<a-box id="box" position="100 0.5 -1.5"
 			color="#e2e2e2" depth="0.5" width="0.5" height="0.5"
 			change-color-on-hover="color: #8bdfec">
 		</a-box> 
 		
 		<a-plane id="ground"
 			color="#3cba31" rotation="270 0 0" width="300" height="300"
-			position="0 -0.2 0" shadow static-body> 
+			position="100 -0.2 0" shadow static-body> 
 		</a-plane> 
 		
 		<a-sky color="#64B5F6"> 
 		</a-sky> 
 		
 		<a-camera id="camera" universal-controls
-			wasd-controls position="0 0.5 0"> 
+			wasd-controls position="100 0.5 0"> 
 			<a-cursor id="cursor"
 				color="white"> 
 			</a-cursor> 
 		</a-camera> 
 	</a-scene>
- 
- 
+
 	<video id="videoInput" width="640" height="480" autoplay muted></video>
 	<!-- <canvas id="canvasOutput" width="640" height="480"></canvas>  -->
 
