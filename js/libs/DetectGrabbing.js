@@ -81,7 +81,7 @@ function DetectGrabbing(video, htmlView){
 	cv.findContours(temp, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
 
 	// find largest contour
-	cnt = getLargestContour(contours);
+	cnt = contours.get(getIndexOfLargestContour(contours));
 	
 	if(cnt) {
 	
@@ -133,7 +133,7 @@ function makeHandMaskGRAY(src, temp, lowRangeGRAY, highRangeGRAY, ksize){
 	return temp;
 }
 
-function getLargestContour(contours){
+function getIndexOfLargestContour(contours){
 
 	let max_area = 0;
 	let cnt;
@@ -148,9 +148,8 @@ function getLargestContour(contours){
                 max_contour_index=i;
             }
 	}
-	
-	cnt = contours.get(max_contour_index);
-	return cnt;
+
+	return max_contour_index;
 }
 
 function findCenter(cnt, centroid){
