@@ -49,5 +49,7 @@ let dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
 let start_camera_rotation = cam.getAttribute('rotation');
 let alfa;
 
+let fingerAmount = -1;
+
 //Init mode
 var mode = "DiagnosticMode"

@@ -6,7 +6,7 @@ function setDefaultCursorColor(){
 function checkHover() {
 	el.addEventListener('mouseenter', function () {
 		hovered = true;
-		el.setAttribute('color', "blue");
+		el.setAttribute('color', "#bad4ff");
 	});
 	el.addEventListener('mouseleave', function () {
 		hovered = false;

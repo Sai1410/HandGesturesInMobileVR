@@ -119,6 +119,9 @@ function detectFingerTips(cnt, hull, rect, defect, tipPoints){
 		decideTipPoint(previewTip, point, rect, tipPoints);
 		previewTip = point;
 	}
+	if(fingerAmount){	
+		fingerAmount = tipPoints.length
+	}
 }
 
 function decideTipPoint(previewTip, point, rect, tipPoints){
