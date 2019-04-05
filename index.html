@@ -23,7 +23,7 @@
 		</a-box> 
 		
 		<a-plane id="ground"
-			color="#3cba31" rotation="270 0 0" width="300" height="300"
+			color="#bababa" rotation="270 0 0" width="300" height="300"
 			position="0 -0.2 0" shadow static-body> 
 		</a-plane> 
 		
@@ -31,13 +31,19 @@
 		</a-sky> 
 		
 		<a-camera id="camera" universal-controls
-			wasd-controls position="0 0.5 0"> 
+			wasd-controls position="0 0.5 0">
+			<a-entity id="MessageField" position="-0.4 0.75 -1" ></a-entity> 
+			<a-entity id="FPSField" position="2.1 0.75 -1" ></a-entity> 
 			<a-cursor id="cursor"
 				color="white"> 
+			</a-cursor> 
+			<a-cursor id="HandMoment"
+				color="#ffe0bd" position="0 0.75 -1"> 
 			</a-cursor> 
 		</a-camera> 
 	</a-scene>
 
+	<p>TEXT</p>
 	<video id="videoInput" width="640" height="480" autoplay muted style="float: left;"></video>
 	<div id="cameraOnly">
 		<canvas id="canvasOutput" width="640" height="480" style="float: left;"></canvas>
@@ -71,6 +77,7 @@
 	<script src="js/libs/opencv.js" type="text/javascript"></script>
 	<script src="js/libs/DetectGrabbing.js" type="text/javascript"></script>
 	<script src="js/modes/mainMode.js" type="text/javascript"></script>
+	<script src="js/modes/diagnosticMode.js" type="text/javascript"></script>
 	<script src="js/modes/cameraOnlyMode.js" type="text/javascript"></script>
 	<script src="js/main.js" type="text/javascript"></script>
 

@@ -28,6 +28,8 @@ let hierarchy = new cv.Mat();
 
 let defect = new cv.Mat();
 
+let center;
+
 function DetectGrabbing(video, htmlView){
 
 	if(htmlView == false){
@@ -70,7 +72,6 @@ function DetectGrabbing(video, htmlView){
 	
 	let cnt;
 	let rect;
-	let center;
 	
 	cap.read(src);
 	
@@ -85,7 +86,7 @@ function DetectGrabbing(video, htmlView){
 	
 	if(cnt) {
 	
-		// get center of contour
+		// get center
 		center = findCenter(cnt, centroid);
 	
 		// get rectangle of contour

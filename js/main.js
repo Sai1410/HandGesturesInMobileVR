@@ -1,23 +1,26 @@
 let browser = "Firefox"
-var mode = "Main"
+var mode = "DiagnosticMode"
+let delay; 
 
 function changeMode(inputMode){
 	mode = inputMode;
 }
 
-const FPS = 25;
+const FPS = 20;
 function processVideo() {
 		begin = Date.now();
 
 		if(mode === "Main") {
 			mainMode();
+		} else if(mode === "DiagnosticMode"){
+			diagnosticMode();
 		} else  {
 			dst = cameraOnly(mode)
 		}
 
 		cv.imshow('canvasOutput', dst);
 
-		let delay = 1000/FPS - (Date.now() - begin);
+		delay = 1000/FPS - (Date.now() - begin);
 		setTimeout(processVideo, delay);
 }
 // schedule the first one.
