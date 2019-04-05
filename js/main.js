@@ -1,7 +1,3 @@
-let browser = "Firefox"
-var mode = "DiagnosticMode"
-let delay; 
-
 function changeMode(inputMode){
 	mode = inputMode;
 }
