@@ -6,6 +6,8 @@ function DetectGrabbing(video, htmlView){
 	
 	let cnt;
 	let rect;
+
+	fingerAmount = -1;
 	
 	cap.read(src);
 	

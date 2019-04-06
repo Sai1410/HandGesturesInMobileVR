@@ -32,6 +32,14 @@ function cameraOnly (mode) {
     
     let cnt = contours.get(max_idx);
 
+    if(mode === "handCenter"){
+        // get center
+        center = findCenter(cnt, centroid);
+        cv.circle(dst, center, 3, color, -1)
+
+        return dst
+    }
+
     // get rectangle of contour
     let rect = getRectangle(cnt);
 
@@ -89,7 +97,7 @@ function cameraOnly (mode) {
         grabState = detectGrabbing(tipPoints, pointer, thumb);
 
         //Draw
-        if(mode === "Grabbing"){
+        if(mode === "CameraOnly"){
             if(grabState){
                 cv.circle(dst, thumb, 3, color, -1)
                 cv.circle(dst, pointer, 3, color, -1)

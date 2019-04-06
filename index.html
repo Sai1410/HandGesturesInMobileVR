@@ -44,7 +44,6 @@
 		</a-camera> 
 	</a-scene>
 
-	<p>TEXT</p>
 	<video id="videoInput" width="640" height="480" autoplay muted style="float: left;"></video>
 	<div id="cameraOnly">
 		<canvas id="canvasOutput" width="640" height="480" style="float: left;"></canvas>
@@ -66,11 +65,20 @@
 		<button type="button" style="display: block;" onclick="changeMode('ThumbAndPointer')">
 				ThumbAndPointer
 		</button>	
-		<button type="button" style="display: block;" onclick="changeMode('Grabbing')">
-				Grabbing
+		<button type="button" style="display: block;" onclick="changeMode('CameraOnly')">
+				CameraOnly
+		</button>	
+		<button type="button" style="display: block;" onclick="changeMode('handCenter')">
+				Center
 		</button>	
 		<button type="button" style="display: block;" onclick="changeMode('NoDetection')">
 				NoDetection
+		</button>	
+		<button type="button" style="display: block;" onclick="changeMode('DiagnosticMode')">
+				DiagnosticMode
+		</button>	
+		<button type="button" style="display: block;" onclick="changeMode('Main')">
+				Main
 		</button>	
 	</div>
 
