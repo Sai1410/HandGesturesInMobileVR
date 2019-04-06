@@ -45,6 +45,9 @@ function DetectGrabbing(video, htmlView){
 		}
 		
 		tipPoints = [];
+	} else {
+		center.x = 0;
+		center.y = 0;
 	}
 	
 	return grabState;
