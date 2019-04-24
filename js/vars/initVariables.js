@@ -30,7 +30,6 @@ let hierarchy = new cv.Mat();
 let defect = new cv.Mat();
 
 let center;
-let delay; 
 
 //Variables for interaction with a-frame
 

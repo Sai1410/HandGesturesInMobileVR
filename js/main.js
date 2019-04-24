@@ -2,9 +2,22 @@ function changeMode(inputMode){
 	mode = inputMode;
 }
 
+function requestAnimFrame() {
+
+  if(!lastCalledTime) {
+     lastCalledTime = performance.now();
+     fps = 0;
+     return;
+  }
+  delta = (performance.now() - lastCalledTime)/1000;
+  lastCalledTime = performance.now();
+  fps = 1/delta;
+} 
+
+var lastCalledTime;
+var fps;
 const FPS = 20;
 function processVideo() {
-	begin = Date.now();
 
 	try{
 		if(mode === "Main") {
@@ -18,9 +31,10 @@ function processVideo() {
 	}catch(error){
 		document.getElementById('MessageField').setAttribute('text',  "value: " + error + "; color: red; width: 1.5;");
 	}
-	
-	delay = 1000/FPS - (Date.now() - begin);
-	setTimeout(processVideo, delay);
+
+	requestAnimFrame()
+
+	setTimeout(processVideo, fps);
 }
 // schedule the first one.
 setTimeout(processVideo, 0);
