@@ -59,7 +59,3 @@ function moveAnObject() {
 function toRadians (angle) {
 	  return angle * (Math.PI / 180);
 	}
-
-function transformPointIntoAFrame (point) {
-	
-}

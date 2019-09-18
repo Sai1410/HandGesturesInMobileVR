@@ -15,10 +15,11 @@ function DetectGrabbing(video, htmlView){
 	temp = makeHandMaskGRAY(src, temp, lowRangeGRAY, highRangeGRAY, ksize);
 	
 	// find contours on img
-	cv.findContours(temp, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+	cv.findContours(temp, contours, hierarchy, cv.RETR_CCOMP, cv.CHAIN_APPROX_SIMPLE);
 
 	// find largest contour
-	cnt = contours.get(getIndexOfLargestContour(contours));
+	let [max_idx, hole_contour_idx]  = getIndexOfLargestContour(contours);	
+	cnt = contours.get(max_idx);
 	
 	if(cnt) {
 	
@@ -34,15 +35,8 @@ function DetectGrabbing(video, htmlView){
 		// detect fingertips
 		detectFingerTips(cnt, hull, rect, defect, tipPoints);
 		
-		if(tipPoints.length > 3){
-			
-			
-			// Get thumb and pointing finger
-			getThumbAndPointer(video, tipPoints, pointer, thumb);
-			
-			// DetectGrabbing
-			grabState = detectGrabbing(tipPoints, pointer, thumb);
-		}
+		// DetectGrabbing
+		grabState = detectGrabbing(hole_contour_idx);
 		
 		tipPoints = [];
 	} else {
@@ -68,7 +62,7 @@ function makeHandMaskGRAY(src, temp, lowRangeGRAY, highRangeGRAY, ksize){
 	cv.cvtColor(src, temp, cv.COLOR_RGB2GRAY, 0);
 	cv.inRange(temp,lowRangeGRAY, highRangeGRAY,temp);
 	cv.GaussianBlur(temp, temp, ksize, 0, 0, cv.BORDER_DEFAULT);
-	cv.threshold(temp, temp, 200, 255,cv.THRESH_BINARY);
+	cv.threshold(temp, temp, 175, 255,cv.THRESH_BINARY);
 	
 	return temp;
 }
@@ -76,20 +70,25 @@ function makeHandMaskGRAY(src, temp, lowRangeGRAY, highRangeGRAY, ksize){
 function getIndexOfLargestContour(contours){
 
 	let max_area = 0;
+	let hole_area = 0;
 	let cnt;
 	let area;
 	let max_contour_index = 0; 
-	
+	let hole_contour_index = 0
 	for (let i = 0; i < contours.size(); ++i) {
-            cnt=contours.get(i);
-            area = cv.contourArea(cnt, false)
-            if(area>max_area){
-                max_area=area;
-                max_contour_index=i;
-            }
+		cnt=contours.get(i);
+		area = cv.contourArea(cnt, false)
+		
+		if(area>max_area){
+			max_area=area;
+			max_contour_index=i;
+		}
+		if(area > hole_area && hole_area < max_area){
+			hole_contour_index = i
+		}
 	}
 
-	return max_contour_index;
+	return [max_contour_index, hole_contour_index];
 }
 
 function findCenter(cnt, centroid){
@@ -110,9 +109,7 @@ function getRectangle(cnt){
 
 function detectFingerTips(cnt, hull, rect, defect, tipPoints){
 
-	let total = 0;
 	let previewTip = null;
-	let previewFold = null;
 	
 	// Get all convexity defects
 	cv.convexityDefects(cnt, hull, defect);
@@ -121,7 +118,7 @@ function detectFingerTips(cnt, hull, rect, defect, tipPoints){
 	
 		let point = new cv.Point(cnt.data32S[defect.data32S[i * 4] * 2],
 			                     cnt.data32S[defect.data32S[i * 4] * 2 + 1]);
-		decideTipPoint(previewTip, point, rect, tipPoints);
+		if(tipPoints.length < 5) decideTipPoint(previewTip, point, rect, tipPoints);
 		previewTip = point;
 	}
 	if(fingerAmount){	
@@ -172,18 +169,7 @@ function getThumbAndPointer(video, tipPoints, pointer, thumb){
 	}
 }
 
-function detectGrabbing(tipPoints, pointer, thumb) {
-	if(tipPoints.length == 4) {
-		if(getDist(pointer,thumb) > 50) {
-			return true;
-		}
-	} else if (tipPoints.length == 5){
-		if(getDist(pointer,thumb) < 30) {
-			return true;		
-		} else {
-		
-			return false;
-		}
-	}	
+function detectGrabbing(hole_contour_index) {
+	if(hole_contour_index) return true;
 }
 

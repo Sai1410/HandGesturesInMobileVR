@@ -20,13 +20,14 @@ const FPS = 20;
 function processVideo() {
 
 	try{
-		if(mode === "Main") {
+		if(mode === "AFrameMainMode") {
 			mainMode();
 		} else if(mode === "DiagnosticMode"){
 			diagnosticMode();
 		} else  {
 			dst = cameraOnly(mode)
 		}
+		
 		cv.imshow('canvasOutput', dst);
 	}catch(error){
 		document.getElementById('MessageField').setAttribute('text',  "value: " + error + "; color: red; width: 1.5;");
