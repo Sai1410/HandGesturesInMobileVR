@@ -70,18 +70,17 @@ function cameraOnly (mode) {
         }
 
         // detect fingertips
-        detectFingerTips(cnt, hull, rect, defect, tipPoints);
+        detectFingerTips(cnt, hull, rect, defect, tipPoints, hole_contour_idx);
         //Draw
         if(mode === "FingerTips"){
             for(let i = 0; i < tipPoints.length ; i++){
                 cv.circle(dst, tipPoints[i], 3, color, -1)
                 cv.line(dst, tipPoints[i], center, [255, 0, 0, 255])
             }
-            return dst
         }
 
         grabState = detectGrabbing(hole_contour_idx);
-        document.getElementById("detectedFingerTips").innerHTML = `Detected Finger Tips: ${tipPoints.length}`
+        document.getElementById("detectedFingerTips").innerHTML = `Detected Finger Tips: ${fingerAmount}`
         document.getElementById("detectedGrabbing").innerHTML = `Detected Grabbing: ${grabState ? grabState : false}`
     }
     return dst

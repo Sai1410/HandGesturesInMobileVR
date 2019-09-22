@@ -33,7 +33,7 @@ function DetectGrabbing(video, htmlView){
 		cv.convexHull(cnt, hull, false, false);
 		
 		// detect fingertips
-		detectFingerTips(cnt, hull, rect, defect, tipPoints);
+		detectFingerTips(cnt, hull, rect, defect, tipPoints, hole_contour_idx);
 		
 		// DetectGrabbing
 		grabState = detectGrabbing(hole_contour_idx);
@@ -107,7 +107,7 @@ function getRectangle(cnt){
 	return cv.boundingRect(cnt);
 }
 
-function detectFingerTips(cnt, hull, rect, defect, tipPoints){
+function detectFingerTips(cnt, hull, rect, defect, tipPoints, hole_contour_idx){
 
 	let previewTip = null;
 	
@@ -123,6 +123,7 @@ function detectFingerTips(cnt, hull, rect, defect, tipPoints){
 	}
 	if(fingerAmount){	
 		fingerAmount = tipPoints.length
+		hole_contour_idx && fingerAmount < 5 && fingerAmount++
 	}
 }
 
@@ -134,7 +135,7 @@ function decideTipPoint(previewTip, point, rect, tipPoints){
 	if(previewTip){
 	
 		dist2 = getDist(previewTip, point);
-		if(dist2 > 20){
+		if(dist2 > 40){
 			if(dist > (rect.height / 4)){
 				tipPoints.push(point);
 			}
