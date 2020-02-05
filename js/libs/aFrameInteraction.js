@@ -12,6 +12,11 @@ function checkHover() {
 		hovered = false;
 		el.setAttribute('color', "white");
 	});	  
+
+	document.querySelector('#switch-mode-button').addEventListener('mouseenter', function() {
+		mode = "CameraOnlyMode";
+		document.getElementById("cameraOnly").setAttribute("style", "display: block")
+	});	
 }
 
 function browserDetection() {
