@@ -25,8 +25,10 @@ function cameraOnly (mode) {
     //Draw
     if(mode === "LargestContour"){
         cv.drawContours(dst, contours, max_idx, color, 1, cv.LINE_8, hierarchy, 100);
+    }
+
+    if(mode === "HandHole" && max_idx !== hole_contour_idx){
         cv.drawContours(dst, contours, hole_contour_idx, color, 1, cv.LINE_8, hierarchy, 100);
-        return dst
     }
     
     let cnt = contours.get(max_idx);
@@ -37,8 +39,6 @@ function cameraOnly (mode) {
         if(mode === "handCenter"){
             // get center
             cv.circle(dst, center, 3, color, -1)
-
-            return dst
         }
 
         // get rectangle of contour
@@ -48,9 +48,7 @@ function cameraOnly (mode) {
         if(mode === "Rectangle"){
             let point1 = new cv.Point(rect.x, rect.y);
             let point2 = new cv.Point(rect.x + rect.width, rect.y + rect.height);
-            cv.rectangle(dst, point1, point2, color, 2, cv.LINE_AA, 0);
-        
-            return dst    
+            cv.rectangle(dst, point1, point2, color, 2, cv.LINE_AA, 0); 
         }
 
 
@@ -62,12 +60,10 @@ function cameraOnly (mode) {
 
             hullVector.push_back(hull);
             cv.drawContours(dst, hullVector, 0, color, 1, 8, hierarchy, 0);
-
-            return dst
-        } else {
-            // get hull
-            cv.convexHull(cnt, hull, false, false);
-        }
+        } 
+        // get hull
+        cv.convexHull(cnt, hull, false, false);
+     
 
         // detect fingertips
         detectFingerTips(cnt, hull, rect, defect, tipPoints, hole_contour_idx);

@@ -1,4 +1,15 @@
 function changeMode(inputMode){
+	if(inputMode === "AFrameMainMode") {
+		document.getElementById('cameraOnly').setAttribute('style', 'display: none;')
+		document.getElementById('ascene').setAttribute('style', 'display: default;')
+		document.getElementById('FPSField').setAttribute('text', 'value: ')
+		document.getElementById('FingerAmountField').setAttribute('text', 'value: ')
+		document.getElementById('MessageField').setAttribute('text', 'value: ')
+		
+	} else if (inputMode === "DiagnosticMode") {
+		document.getElementById('cameraOnly').setAttribute('style', 'display: none;')
+		document.getElementById('ascene').setAttribute('style', 'display: default;')	
+	}
 	mode = inputMode;
 }
 

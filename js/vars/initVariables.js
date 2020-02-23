@@ -51,4 +51,4 @@ let alfa;
 let fingerAmount = -1;
 
 //Init mode
-var mode = "AFrameMainMode"
+var mode = "CameraOnlyMode"

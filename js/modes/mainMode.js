@@ -1,8 +1,5 @@
 function mainMode(){
 
-	document.getElementById('cameraOnly').setAttribute('style', 'display: none;')
-	document.getElementById('ascene').setAttribute('style', 'display: default;')
-
 	browserDetection();
 
 	checkHover();
