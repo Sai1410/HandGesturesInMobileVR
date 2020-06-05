@@ -39,13 +39,13 @@ function setObjectStartPositions(curr_camera_position, curr_camera_rotation) {
 }
 
 function setObjectNewPositions(curr_camera_position, curr_camera_rotation){
-	deltaAngle = Math.abs(curr_camera_rotation.y - start_camera_rotation);
-		
+	deltaAngle = start_camera_rotation - curr_camera_rotation.y;
+	
 	// Calculate new position
 	let new_position_z = start_obj_point.x * Math.cos(toRadians(deltaAngle)) + start_obj_point.y * Math.sin(toRadians(deltaAngle));
-	let new_position_x = (-1) * start_obj_point.y * Math.cos(toRadians(deltaAngle)) + start_obj_point.x * Math.sin(toRadians(deltaAngle));
+	let new_position_x = start_obj_point.y * Math.cos(toRadians(deltaAngle)) - start_obj_point.x * Math.sin(toRadians(deltaAngle));
 
-	el.object3D.position.set((-1) * new_position_x, curr_camera_position.y, new_position_z);
+	el.object3D.position.set(new_position_x, curr_camera_position.y, new_position_z);
 }
 
 function moveAnObject() {
