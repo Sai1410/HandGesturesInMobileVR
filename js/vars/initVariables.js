@@ -11,11 +11,11 @@ let lowRangeHSV = new cv.Mat(temp.rows, temp.cols, temp.type(), new cv.Scalar(0,
 let highRangeHSV = new cv.Mat(temp.rows, temp.cols, temp.type(), new cv.Scalar(65,255, 15));
 
 let lowScalarGRAY= new cv.Scalar(0, 0, 0);
-let highScalarGRAY= new cv.Scalar(65,255, 15);
+let highScalarGRAY= new cv.Scalar(50, 15);
 let lowRangeGRAY= new cv.Mat(temp.rows, temp.cols, temp.type(), lowScalarGRAY);
 let highRangeGRAY = new cv.Mat(temp.rows, temp.cols, temp.type(), highScalarGRAY );
 
-let ksize = new cv.Size(9, 9);
+let ksize = new cv.Size(17, 17);
 
 let centroid = new cv.Point();
 
